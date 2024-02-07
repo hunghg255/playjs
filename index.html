@@ -8,6 +8,37 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Playground JS</title>
 
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/gh/lelinh014756/fui-toast-js@master/assets/css/toast@1.0.1/fuiToast.min.css" />
+  <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/gh/lelinh014756/fui-toast-js@master/assets/js/toast@1.0.1/fuiToast.min.js"></script>
+  <link rel="canonical" href="https://playjs.js.org">
+  <link rel="icon" type="image/png" href="https://js.org/favicon.png" sizes="16x16">
+  <link rel="icon" type="image/png" href="https://js.org/ico/favicon-32.png" sizes="32x32">
+  <link rel="icon" type="image/svg+xml" href="https://js.org/ico/favicon.svg">
+  <link rel="apple-touch-icon" href="https://js.org/ico/apple-touch-icon.png">
+
+  <!-- Primary Meta Tags -->
+  <title>Playground Javascript</title>
+  <meta name="title" content="Playground Javascript" />
+  <meta name="description" content="Playground javascript" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://playjs.js.org/" />
+  <meta property="og:title" content="Playground Javascript" />
+  <meta property="og:description" content="Playground javascript" />
+  <meta property="og:image" content="https://js.org/ico/favicon.svg" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://playjs.js.org/" />
+  <meta property="twitter:title" content="Playground Javascript" />
+  <meta property="twitter:description" content="Playground javascript" />
+  <meta property="twitter:image" content="https://js.org/ico/favicon.svg" />
+
+  <!-- Meta Tags Generated with https://metatags.io -->
+
   <style lang="css" data-name="base">
     html,
     body {
@@ -47,39 +78,31 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      padding: 1em 6em;
-      background-color: #333;
+      padding: 10px;
+      background-color: #202020;
       color: #fff;
     }
 
-    div#app>div.logs {
-      /* flex-grow: 1;
-      height: 0;
-      padding: 10px 0;
-      overflow-y: auto; */
-    }
-
-    div#app>div#container {
-      width: 100%;
-      min-height: 200px;
-      border-top: 1px solid #ccc;
-    }
-
-    div#app>div#start {
-      margin: auto;
+    div#app div#start {
       display: flex;
       align-items: center;
       justify-content: center;
-      max-width: 20px;
-      padding: 10px;
+      padding: 8px;
       color: #65b766;
       cursor: pointer;
-      user-select: none;
-      border: 1px solid lightgray;
       border-radius: 4px;
       background-color: #65b766;
-      color: white;
+    }
 
+    div#app div#share {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      color: #65b766;
+      cursor: pointer;
+      border-radius: 4px;
+      background-color: #65b766;
     }
   </style>
   <style lang="css" data-name="logs">
@@ -133,7 +156,7 @@
 
     .contentContainer {
       display: flex;
-      height: calc(100vh - 112px)
+      height: calc(100vh - 58px)
     }
 
     #container,
@@ -163,6 +186,17 @@
     body {
       overflow: hidden;
     }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .fui-toast {
+      justify-content: center !important;
+    }
   </style>
   <link rel="stylesheet" data-name="vs/editor/editor.main" href="./monaco/min/vs/editor/editor.main.css">
 </head>
@@ -172,12 +206,24 @@
   <div id="app">
     <header>
       <h1 style="margin: 0">
-        <a href="https://github.com/hunghg255/playground-js" style="color: #fff; text-decoration: none">Playground
+        <a href="https://github.com/hunghg255/playground-js"
+          style="color: #fff; text-decoration: none; display: flex; align-items: center;">
+          <img src="https://api.iconify.design/vscode-icons:file-type-js-official.svg?color=%2300bfff"
+            style="width: 32px; height: 32px; margin-right: 4px" />
+          Playground
           JS</a>
       </h1>
-    </header>
 
-    <div id="start">▶</div>
+      <div class="actions">
+        <div id="start">
+          <img src="https://api.iconify.design/material-symbols:play-arrow-rounded.svg?color=%23ffffff"
+            style="width: 20px; height: 20px;" />
+        </div>
+        <div id="share">
+          <img src="https://api.iconify.design/ic:round-share.svg?color=%23ffffff" style="width: 20px; height: 20px;" />
+        </div>
+      </div>
+    </header>
 
     <div class="contentContainer">
       <div id="container"></div>
@@ -264,6 +310,8 @@
     </div>
   </template>
 
+  <div id="fui-toast"></div>
+
   <script>
     var require = { paths: { vs: './monaco/min/vs' } }
   </script>
@@ -301,32 +349,6 @@
           input.select()
           document.execCommand('copy')
           document.body.removeChild(input)
-        }
-        let messages = []
-        /**
-         * display a message
-         * @param {string} content
-         * @param {number} duration
-         */
-        window.showMessage = function (content, duration = 3000) {
-          const message = createEleByTmpl('message-template', { content })
-          // compute message top
-          const top = messages.reduce((acc, msg) => {
-            return acc + msg.offsetHeight + 10
-          }, 10)
-          message.style.top = top + 'px'
-          document.body.appendChild(message)
-          messages.push(message)
-          setTimeout(() => {
-            message.classList.add('show')
-          }, 0)
-          setTimeout(() => {
-            message.classList.remove('show')
-            setTimeout(() => {
-              document.body.removeChild(message)
-              messages = messages.filter((m) => m !== message)
-            }, 300)
-          }, duration)
         }
       })()
   </script>
@@ -414,7 +436,7 @@ for (let i of /0~10/) {
         window.addEventListener('hashchange', setCodeByUrl)
         const editor = monaco.editor.create(document.getElementById('container'), {
           value: '',
-          language: 'javascript'
+          language: 'javascript',
         })
         setCodeByUrl()
         let historyIndex = -1
@@ -423,7 +445,7 @@ for (let i of /0~10/) {
           location.hash = `#${encodeURIComponent(editor.getValue())}`
           // copy url to clipboard
           copyToClipboard(location.href)
-          showMessage('<h3 style="margin: 0">url copied to clipboard, share it with your friends!</h3>')
+          FuiToast.success('URL copied to clipboard, share it with your friends!')
         })
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, function () {
           const code = editor.getValue().trim()
@@ -471,6 +493,16 @@ for (let i of /0~10/) {
           .addEventListener('click', throttle(() => {
             run(editor.getValue(), 'javascript')
           }, 200))
+
+        document.querySelector('#share')
+          .addEventListener('click', () => {
+            // save code to hash
+            location.hash = `#${encodeURIComponent(editor.getValue())}`
+            // copy url to clipboard
+            copyToClipboard(location.href)
+
+            FuiToast.success('URL copied to clipboard, share it with your friends!')
+          })
       })()
   </script>
 
