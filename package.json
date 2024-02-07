@@ -1,0 +1,40 @@
+{
+  "name": "playground-js",
+  "version": "0.3.1",
+  "engines": {
+    "node": ">=16.18.0"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "author": "YiJie <yijie4188@gmail.com>",
+  "homepage": "https://github.com/hunghg255/playground-js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hunghg255/playground-js.git"
+  },
+  "license": "MIT",
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "register.js"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./register": "./register.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "mocha index.spec.js"
+  },
+  "keywords": [
+    "prototype",
+    "interator",
+    "util",
+    "tool"
+  ],
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.1.0"
+  }
+}
